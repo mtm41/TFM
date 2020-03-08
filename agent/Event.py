@@ -5,7 +5,11 @@ class Event:
         self.userdate = userdate
         self.timecreated = ""
 
+    def getSourceName(self):
+        return None
+
     def checkEventTime(self, date):
+        good = False
         creationDateStr = self.timecreated.items()[0][1]
         creationDate = creationDateStr.split(":")
         creationYear = creationDate[0].split("-")[0]
@@ -17,5 +21,5 @@ class Event:
                 and date.day == int(creationDay) and date.hour == int(creationHour) \
                 and int(date.minute - int(creationMinute)) <= 5:
             print('ALERT')
-        print(creationDateStr)
-        return True
+            good = True
+        return good

@@ -1,9 +1,9 @@
 from Event import Event
 
 
-class InstallEvent(Event):
-    def __init__(self, provider, timeCreated, data, sourceName):
-        super().__init__(provider, timeCreated, data)
+class SystemUpdateEvent(Event):
+    def __init__(self, id, timeCreated, data, sourceName):
+        super().__init__(id, timeCreated, data)
         self.timecreated = timeCreated
         if data:
             self.data = data[0]
@@ -19,12 +19,12 @@ class InstallEvent(Event):
 
     def checkEvent(self, date):
         good = False
-
-        if self.data and "Installation" in self.data:
+        if self.data and self.provider == 19:
             if date.year == self.timecreated.year and date.month == self.timecreated.month \
                     and date.day == self.timecreated.day and date.hour+1 == self.timecreated.hour \
                     and int(date.minute - self.timecreated.minute) <= 5:
-                print('Hay una instalación hecha por un MsiInstaller')
+                print('Hay una actualización del sistema')
+                print(self.data)
                 good = True
 
         return good
