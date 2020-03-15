@@ -1,14 +1,25 @@
 from flask import Flask
 
+from Model.Organization import Organization
+from Report import Report
+
 app = Flask(__name__)
 
 @app.route('/')
 def get():
-    return 'Hello World!'
+    return 'Hello World! This service has the objective of performing periodical vulnerability analysis on remote systems'
 
 @app.route('/api/<key>/report/<timestamp>', methods=['GET'])
 def getReport(key, timestamp):
-    return 'User has asked for report created at %s' % timestamp
+    org = Organization()
+    if org.authenticate(key):
+        report = Report(timestamp, org.name)
+        print('REPORT OBTENIDO')
+        report_json = report.generate()
+        print(report_json)
+        return 'User has asked for report created at %s' % timestamp
+    else:
+        return 'Not authorized'
 
 #PUT
 @app.route('/api/service/<service>', methods=['PUT'])

@@ -1,7 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e4acdb14-a6b0-4767-9c09-ebaeab5b0603" name="Default Changelist" comment="" />
+    <list default="true" id="e4acdb14-a6b0-4767-9c09-ebaeab5b0603" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Report.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/agente-externo.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/agente-externo.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DAO/OrganizationDAO.py" beforeDir="false" afterPath="$PROJECT_DIR$/DAO/OrganizationDAO.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DAO/ServiceDAO.py" beforeDir="false" afterPath="$PROJECT_DIR$/DAO/ServiceDAO.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DAO/TestDAO.py" beforeDir="false" afterPath="$PROJECT_DIR$/DAO/TestDAO.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DatabaseConnection.py" beforeDir="false" afterPath="$PROJECT_DIR$/DatabaseConnection.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Organization.py" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Organization.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Service.py" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Service.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Test.py" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Schema.sql" beforeDir="false" afterPath="$PROJECT_DIR$/Schema.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server.py" beforeDir="false" afterPath="$PROJECT_DIR$/server.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -14,7 +29,11 @@
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
   <component name="ProjectId" id="1Yqmem9wuqislht8N8E1sYLrblc" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showExcludedFiles" value="true" />
@@ -22,7 +41,9 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="settings.editor.selected.configurable" value="application.passwordSafe" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -38,13 +59,13 @@
     <servers />
   </component>
   <component name="WindowStateProjectService">
-    <state x="571" y="238" key="SettingsEditor" timestamp="1583681964855">
+    <state x="571" y="238" key="SettingsEditor" timestamp="1584264502614">
       <screen x="0" y="27" width="1920" height="1011" />
     </state>
-    <state x="571" y="238" key="SettingsEditor/0.27.1920.1011@0.27.1920.1011" timestamp="1583681964855" />
-    <state x="616" y="360" key="com.intellij.ide.util.TipDialog" timestamp="1583678603509">
+    <state x="571" y="238" key="SettingsEditor/0.27.1920.1011@0.27.1920.1011" timestamp="1584264502614" />
+    <state x="616" y="360" key="com.intellij.ide.util.TipDialog" timestamp="1584270279119">
       <screen x="0" y="27" width="1920" height="1011" />
     </state>
-    <state x="616" y="360" key="com.intellij.ide.util.TipDialog/0.27.1920.1011@0.27.1920.1011" timestamp="1583678603509" />
+    <state x="616" y="360" key="com.intellij.ide.util.TipDialog/0.27.1920.1011@0.27.1920.1011" timestamp="1584270279119" />
   </component>
 </project>

@@ -1,5 +1,6 @@
+from datetime import datetime
+
 from DatabaseConnection import DatabaseConnection
-from Model.Test import Test
 
 
 class TestDAO:
@@ -19,7 +20,7 @@ class TestDAO:
         cur = conn.cursor()
 
         sql = "INSERT INTO Prueba(nombre, tipo, fechaInicio, fechaFin, estado, descripcion, consejo,  servicioIP, " \
-              "servicioPuerto) VALUES (?,?,?,?,?,?,?,?,?)"
+              "servicioPuerto) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)"
         data_tuple = (self.name, self.type, self.initDate, self.endDate, self.state,
                       self.description, self.advice, self.serviceIp, self.servicePort)
 
@@ -35,24 +36,38 @@ class TestDAO:
         conn = DatabaseConnection().conn
         cur = conn.cursor()
 
-        sql = "DELETE FROM Prueba WHERE ID=?"
+        sql = "DELETE FROM Prueba WHERE ID=%s"
         cur.execute(sql, id)
         conn.commit()
 
         conn.close()
         return True
 
-    def read(self, id):
-        organization = None
+    def read(self, serviceIP, servicePORT, organization, timestamp):
+        tests = []
         conn = DatabaseConnection().conn
         cur = conn.cursor()
 
-        sql = "SELECT * FROM Prueba WHERE ID=?"
-        cur.execute(sql, id)
-        resultSet = cur.fetchone()
+        sql = "SELECT * FROM Prueba WHERE servicioIP=%s AND servicioPuerto=%s AND organizacion=%s"
+        cur.execute(sql, (serviceIP, servicePORT, organization))
+        row = cur.fetchone()
 
-        if resultSet is not None:
-            organization = Test(resultSet[0], resultSet[1], resultSet[2], resultSet[3], resultSet[4], resultSet[5],
-                                resultSet[6], resultSet[7], resultSet[8], resultSet[9])
+        while row is not None:
+            test = (row[0], row[1], row[2], row[3], row[4], row[5],
+                 row[6], row[7], row[8], row[9], row[10])
+            if self.executedInDate(test[3], timestamp):
+                tests.append(test)
+            row = cur.fetchone()
 
-        return organization
+        return tests
+
+    def executedInDate(self, plannedTime, timestamp):
+        sameDay = False
+        serviceStartUp = timestamp
+        print(plannedTime)
+        date = plannedTime
+
+        if serviceStartUp.day == date.day and serviceStartUp.month == date.month and serviceStartUp.year == date.year:
+            sameDay = True
+
+        return sameDay
