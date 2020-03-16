@@ -15,20 +15,15 @@ class Service:
         self.serviceDAO.create()
 
     def update(self):
-        return False
+        return self.serviceDAO.update()
 
     def delete(self):
-        self.serviceDAO.delete(self.ip, self.port)
+        return self.serviceDAO.delete(self.ip, self.port, self.organization)
 
     def read(self):
         service_data = self.serviceDAO.read(self.ip, self.port)
-        self.ip = service_data[0]
-        self.port = service_data[1]
-        self.technology = service_data[2]
-        self.analysisTime = service_data[3]
-        self.organization = service_data[4]
 
-        return self
+        return Service(service_data[0], service_data[1], service_data[2], service_data[3], service_data[4])
 
     def readByOrganization(self):
         services = []

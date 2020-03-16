@@ -52,16 +52,24 @@ class OrganizationDAO:
     def update(self):
         return False
 
-    def delete(self):
+    def delete(self, name):
         conn = DatabaseConnection().conn
-        cur = conn.cursor()
+        deleted = False
+        try:
+            cur = conn.cursor()
 
-        sql = "DELETE FROM Organizacion WHERE nombre=%s"
-        cur.execute(sql, self.name)
-        conn.commit()
+            sql = "DELETE FROM Organizacion WHERE nombre=%s"
+            cur.execute(sql, (name,))
+            conn.commit()
+            if cur.rowcount > 0:
+                deleted = True
+        except Exception as ex:
+            print(ex)
+            deleted = False
+        finally:
+            conn.close()
 
-        conn.close()
-        return True
+        return deleted
 
     def read(self, name):
         organization = None

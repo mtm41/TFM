@@ -18,7 +18,7 @@ class Organization:
         return False
 
     def delete(self):
-        self.organizationDAO.delete()
+        return self.organizationDAO.delete(self.name)
 
     # If OrganizationDAO object is initialized this method will search their associated key.
     # On the contrary, it will find any coincidente with api_key and returns data necessary to

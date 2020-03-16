@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS Servicio(
     organizacion varchar(20),
     CONSTRAINT pk_Servicio PRIMARY KEY (ip, puerto, organizacion),
     CONSTRAINT fk_Servicio_Organizacion FOREIGN KEY (organizacion) REFERENCES Organizacion(nombre)
+    ON DELETE CASCADE
 );
 CREATE TABLE IF NOT EXISTS Prueba(
     ID integer auto_increment PRIMARY KEY,
@@ -30,4 +31,5 @@ CREATE TABLE IF NOT EXISTS Prueba(
     servicioPuerto integer(5) NOT NULL,
     organizacion varchar(20) NOT NULL,
     CONSTRAINT fk_Prueba_Servicio FOREIGN KEY (servicioIP, servicioPuerto, organizacion) REFERENCES Servicio(ip,puerto,organizacion)
+    ON DELETE CASCADE
 );

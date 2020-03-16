@@ -23,19 +23,46 @@ class ServiceDAO:
         conn.close()
 
     def update(self):
-        return False
-
-    def delete(self, ip, port):
         conn = DatabaseConnection().conn
-        cur = conn.cursor()
+        updated = False
+        try:
+            cur = conn.cursor()
 
-        sql = "DELETE FROM Servicio WHERE ip=%s AND port=%s"
-        data_tuple = (self.ip, self.port)
-        cur.execute(sql, data_tuple)
-        conn.commit()
+            sql = "UPDATE Servicio SET horaAnalisis=%s WHERE ip=%s AND puerto=%s AND organizacion=%s"
+            data_tuple = (self.timeAnalysis, self.ip, self.port, self.organization)
 
-        conn.close()
-        return True
+            print(data_tuple)
+            cur.execute(sql, data_tuple)
+            if cur.rowcount > 0:
+                updated = True
+            conn.commit()
+        except:
+            return updated
+        finally:
+            conn.close()
+        return updated
+
+    def delete(self, ip, port, organization):
+        conn = DatabaseConnection().conn
+        deleted = False
+        try:
+            cur = conn.cursor()
+
+            sql = "DELETE FROM Servicio WHERE ip=%s AND puerto=%s AND organizacion=%s"
+            data_tuple = (ip, port, organization)
+            cur.execute(sql, data_tuple)
+
+            if cur.rowcount > 0:
+                deleted = True
+
+            conn.commit()
+        except Exception as ex:
+            print(ex)
+            deleted = False
+        finally:
+            conn.close()
+
+        return deleted
 
     def read(self, ip, port):
         service = None

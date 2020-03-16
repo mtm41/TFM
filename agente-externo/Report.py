@@ -9,7 +9,6 @@ from Model.Test import Test
 class Report:
     def __init__(self, timestamp, organization):
         self.datetime = datetime.strptime(timestamp, '%y%m%d')
-        print(self.datetime)
         self.organization = organization
 
     def generate(self):
@@ -20,26 +19,24 @@ class Report:
             "Organization": self.organization,
             "Report Date": str(self.datetime),
             "Phone Number": org_model.tel,
-            "AdminEmail": org_model.email
+            "AdminEmail": org_model.email,
+            "Services": []
         }
 
-        print('Obteniendo servicios...')
-        print(self.organization)
         services = Service(self.organization).readByOrganization()
-        print(services)
 
         for service in services:
             service_report = {
                 "IP": service.ip,
                 "Port": service.port,
                 "Technology": service.technology,
-                "Analysis Time": str(service.analysisTime)[-8:]
+                "Analysis Time": str(service.analysisTime)[-8:],
+                "Tests": []
             }
-            print('Obteniendo pruebas...')
+
             tests = Test(service.ip, service.port, service.organization).read(self.datetime)
-            print(tests)
+
             for test in tests:
-                print(test)
                 test_report = {
                     "Name": test.name,
                     "Type": test.type,
@@ -49,8 +46,8 @@ class Report:
                     "Description": test.description,
                     "Advice": test.advice
                 }
-                service_report.update(test_report)
+                service_report["Tests"].append(test_report)
 
-            organization_report.update(service_report)
+            organization_report["Services"].append(service_report)
 
         return organization_report
