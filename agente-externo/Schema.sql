@@ -6,6 +6,8 @@ CREATE TABLE IF NOT EXISTS Organizacion(
     descripcion varchar(50),
     horaAnalisis time NOT NULL,
     email varchar(30) NOT NULL,
+    inicioJornada time,
+    finJornada time,
     apiKey varchar(20) UNIQUE
 );
 CREATE TABLE IF NOT EXISTS Servicio(
@@ -14,6 +16,7 @@ CREATE TABLE IF NOT EXISTS Servicio(
     tecnologia varchar(15) NOT NULL,
     horaAnalisis time,
     organizacion varchar(20),
+    domainName varchar(20),
     CONSTRAINT pk_Servicio PRIMARY KEY (ip, puerto, organizacion),
     CONSTRAINT fk_Servicio_Organizacion FOREIGN KEY (organizacion) REFERENCES Organizacion(nombre)
     ON DELETE CASCADE

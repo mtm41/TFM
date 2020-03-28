@@ -22,6 +22,26 @@ class ServiceDAO:
 
         conn.close()
 
+    def checkLowest(self):
+        conn = DatabaseConnection().conn
+        lowest = False
+        try:
+            cur = conn.cursor()
+
+            sql = "SELECT horaAnalisis FROM Servicio ORDER BY horaAnalisis Limit 1"
+            cur.execute(sql)
+            resultSet = cur.fetchone()
+
+            if resultSet is not None:
+                lowestTime = resultSet[0]
+                if lowestTime == self.timeAnalysis:
+                    lowest = True
+        finally:
+            cur.close()
+            conn.close()
+
+        return lowest
+
     def update(self):
         conn = DatabaseConnection().conn
         updated = False
@@ -37,7 +57,7 @@ class ServiceDAO:
                 updated = True
             conn.commit()
         except:
-            return updated
+            print('UPDATE SERVICE ERROR')
         finally:
             conn.close()
         return updated
@@ -64,13 +84,13 @@ class ServiceDAO:
 
         return deleted
 
-    def read(self, ip, port):
+    def read(self, ip, port, organizacion):
         service = None
         conn = DatabaseConnection().conn
         cur = conn.cursor()
 
-        sql = "SELECT * FROM Servicio WHERE ip=%s AND port=%s"
-        data_tuple = (ip, port)
+        sql = "SELECT * FROM Servicio WHERE ip=%s AND port=%s AND organizacion=%s"
+        data_tuple = (ip, port, organizacion)
         cur.execute(sql, data_tuple)
         resultSet = cur.fetchone()
 

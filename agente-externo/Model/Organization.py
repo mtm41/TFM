@@ -1,4 +1,8 @@
+import time
+
 from DAO.OrganizationDAO import OrganizationDAO
+from Model.Service import Service
+from Model.Test import Test
 
 
 class Organization:
@@ -13,6 +17,49 @@ class Organization:
 
     def create(self):
         self.organizationDAO.create()
+
+    def checkSchedule(self, ip, toolStartedTime, state):
+        org = self.organizationDAO.read(self.name)
+        scheduleInit = org[5]
+        scheduleEnd = org[6]
+        toolStartedTime = str(toolStartedTime).split(':')
+
+        toolStartedTime = self.sumIntervalTime(toolStartedTime)
+        service = Service(self.name, ip, 0, 'Monitoring', toolStartedTime)
+        if service.read() is not None:
+            if scheduleInit and scheduleEnd:
+                if state == 'start':
+                    if toolStartedTime < scheduleInit or toolStartedTime > scheduleEnd:
+                        print('AVISO, SE HA INICIADO EN UNA HORA PROHIBIDA')
+                    service.delete() # We take advantage of On delete cascade option to delete Tests
+                    service.analysisTime = self.sumIntervalTime(toolStartedTime.split(':'))
+                    service.create()
+                elif state == 'end':
+                    if scheduleInit < toolStartedTime < scheduleEnd:
+                        print('AVISO, SE HA ACTUALIZADO EN UNA HORA PROHIBIDA')
+                    service.analysisTime = scheduleInit
+                    service.update()
+                    test = Test(ip, 0, self.name, 'undefined', 'Monitoring', toolStartedTime, toolStartedTime, 0, 'Local machine has stopped monitoring tool', 'Check if this is normal')
+                    test.create()
+                else:
+                    if not (scheduleInit < toolStartedTime < scheduleEnd):
+                        print('AVISO, SE HA APAGADO EN UNA HORA PROHIBIDA')
+                    nextCheckTime = self.sumIntervalTime(toolStartedTime.split(':'))
+                    service.analysisTime = nextCheckTime
+                    service.update()
+        else:
+            service.create()
+
+    def sumIntervalTime(self, toolStartedTime):
+        rest = (toolStartedTime[1] + 39) % 60
+        if rest > 0:
+            toolStartedTime[0] = toolStartedTime[0] + 1
+            toolStartedTime[1] = toolStartedTime[1] + rest
+        else:
+            toolStartedTime[0] = toolStartedTime[0]
+            toolStartedTime[1] = toolStartedTime[1] + 39
+        toolStartedTime = str('{}:{}').format(toolStartedTime[0], toolStartedTime[1])
+        return toolStartedTime
 
     def update(self):
         return False

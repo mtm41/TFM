@@ -17,13 +17,18 @@ class Service:
     def update(self):
         return self.serviceDAO.update()
 
+    def isLowestTimeRegistered(self):
+        return self.serviceDAO.checkLowest()
+
     def delete(self):
         return self.serviceDAO.delete(self.ip, self.port, self.organization)
 
     def read(self):
-        service_data = self.serviceDAO.read(self.ip, self.port)
-
-        return Service(service_data[0], service_data[1], service_data[2], service_data[3], service_data[4])
+        service_data = self.serviceDAO.read(self.ip, self.port, self.organization)
+        service = None
+        if service_data is not None:
+            service = Service(service_data[0], service_data[1], service_data[2], service_data[3], service_data[4])
+        return service
 
     def readByOrganization(self):
         services = []

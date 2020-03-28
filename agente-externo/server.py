@@ -1,4 +1,6 @@
 import base64
+import os
+import time
 
 from flask import Flask
 from flask import jsonify
@@ -27,6 +29,39 @@ def getReport(key, timestamp):
     else:
         return Response("NOT AUTHORIZED", status=403)
 
+#POST
+@app.route('/api/tool/<base64ip>', methods=['POST'])
+def beginWorkingDay(base64ip):
+    now = time.time()
+    base64IpBytes = base64ip.encode('ascii')
+    message_bytes = base64.b64decode(base64IpBytes)
+    ip_address = message_bytes.decode('ascii')
+
+    api_key = request.args.get('key')
+    state = request.args.get('state')
+
+    if state == 'start' or state == 'end':
+        organization = Organization()
+        organization.authenticate(api_key)
+        organization.checkSchedule(ip_address, now, state)
+
+#PUT
+@app.route('/api/tool/<base64ip>', methods=['PUT'])
+def updateWorkingDay(base64ip):
+    now = time.time()
+    base64IpBytes = base64ip.encode('ascii')
+    message_bytes = base64.b64decode(base64IpBytes)
+    ip_address = message_bytes.decode('ascii')
+
+    api_key = request.args.get('key')
+
+    organization = Organization()
+    organization.authenticate(api_key)
+    organization.checkSchedule(now, 'update')
+    # restart Watcher
+    #os.system('sudo systemctl restart watcher')
+
+
 #PUT
 @app.route('/api/service/<base64Service>', methods=['PUT'])
 def changeTimeForServiceScan(base64Service):
@@ -42,7 +77,11 @@ def changeTimeForServiceScan(base64Service):
     organization = Organization()
     organization.authenticate(api_key)
     serviceToChange = Service(organization.name, ip, port, 'undefined', updatedTime)
+    lowest = serviceToChange.isLowestTimeRegistered()
     if serviceToChange.update():
+        if lowest:
+            #restart Watcher
+            os.system('sudo systemctl restart watcher')
         resp = str('Time uptaded successfully to {}').format(updatedTime)
         return jsonify({'Message': resp})
 

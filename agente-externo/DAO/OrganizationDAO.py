@@ -81,6 +81,6 @@ class OrganizationDAO:
         resultSet = cur.fetchone()
 
         if resultSet is not None:
-            organization = (resultSet[0], resultSet[1], resultSet[2], resultSet[3], resultSet[4])
+            organization = (resultSet[0], resultSet[1], resultSet[2], resultSet[3], resultSet[4], resultSet[5], resultSet[6])
 
         return organization
