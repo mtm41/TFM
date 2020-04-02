@@ -2,7 +2,7 @@ from Event import Event
 
 
 class InstallEvent(Event):
-    def __init__(self, provider, timeCreated, data, sourceName):
+    def __init__(self, provider, timeCreated, data, sourceName, eventID=0):
         super().__init__(provider, timeCreated, data)
         self.timecreated = timeCreated
         if data:

@@ -47,9 +47,7 @@ class AgentMonitor(Winservice):
             self.mngNetworkConnections()
             externalDeviceAlerts = []
 
-
             time.sleep(300)
-
 
     def mngNetworkConnections(self):
         logtype = 'Microsoft-Windows-Sysmon/Operational'
@@ -63,8 +61,7 @@ class AgentMonitor(Winservice):
 
     def checkInstalledPrograms(self, empty):
         review = False
-        installedApps = []
-        installedApps1 = {}
+        installedApps = {}
         appsToWrite = []
         appList = "C:\\installedSoftware.txt"
 
@@ -81,8 +78,7 @@ class AgentMonitor(Winservice):
                     asubkey = OpenKey(aKey, asubkey_name)
                     name = QueryValueEx(asubkey, "DisplayName")
                     version = QueryValueEx(asubkey, "DisplayVersion")
-                    installedApps.append(name[0])
-                    installedApps1[name[0]] = version
+                    installedApps[name[0]] = version
                     if not empty:
                         f = open(appList, "r")
                         found = False
@@ -98,19 +94,22 @@ class AgentMonitor(Winservice):
                     else:
                         appsToWrite.append(name[0])
                 except EnvironmentError:
-                    a = 1
+                    message = 'An error happened when reading {} file'.format(appList)
+                    print(message)
 
         f = open(appList, 'w')
-        for installedApp in installedApps1.keys():
+        for installedApp in installedApps.keys():
             f.write(installedApp)
             f.write('\n')
 
         f.close()
 
-        self.mngAntivirus(installedApps1)
+        self.mngAntivirus(installedApps)
 
         return review
 
+    # This method will perform a series of operations to conclude if antivirus software is
+    # up to date or not
     def mngAntivirus(self, installedApps):
         antivirus = self.checkAntivirusInstalled(installedApps)
         if antivirus:
@@ -129,9 +128,7 @@ class AgentMonitor(Winservice):
                             print('Antivirus Software is NOT up to date, we need to upgrade')
 
     def ListServices(self):
-        resume = 0
         accessSCM = win32con.GENERIC_READ
-        accessSrv = win32service.SERVICE_ACCEPT_SHUTDOWN
 
         # Open Service Control Manager
         hscm = win32service.OpenSCManager(None, None, accessSCM)
@@ -143,6 +140,7 @@ class AgentMonitor(Winservice):
 
         return statuses
 
+    # This method will request actual antivirus software version
     def getAntivirusVersion(self, statuses):
         antivirusUrls = {"avast": "https://avast.en.softonic.com/",
                          "norton": "https://norton-antivirus.en.softonic.com/",
@@ -184,6 +182,7 @@ class AgentMonitor(Winservice):
 
         return antivirusVersions
 
+    # If antivirus exists, this method will return {'antivirus_name': 'antivirus_version'}
     def checkAntivirusInstalled(self, installedApps):
         antivirus = {}
         for app in installedApps.keys():
@@ -239,7 +238,7 @@ class AgentMonitor(Winservice):
                 events = win32evtlog.EvtNext(eventResultSet, totalRecords, -1, 1)
                 break
             except:
-                i = i+1
+                i = i + 1
         return events
 
     def searchEvents(self, date, logtype):
@@ -278,11 +277,11 @@ class AgentMonitor(Winservice):
                     if extDevEvent.checkEvent(date):
                         importantEvents.append(extDevEvent)
             print('Antes')
-            events = self.calculateOffset(totalRecords,eventResultSet)
+            events = self.calculateOffset(totalRecords, eventResultSet)
             totalRecords = totalRecords - len(events)
             print('Despues')
 
-
+    # Method for searching events from Application, Security and System categories
     def searchNormalEvents(self, date, logtype, sourceName):
         importantEvents = []
         suspiciousEvents = []
@@ -298,27 +297,29 @@ class AgentMonitor(Winservice):
                 events = win32evtlog.ReadEventLog(eventLog, flags, 0)
 
                 for ev_obj in events:
+
                     if (ev_obj.SourceName == "MsiInstaller"):
                         evIns = InstallEvent(logtype, ev_obj.TimeGenerated, ev_obj.StringInserts, ev_obj.SourceName)
+                        evIns.__
                         if evIns.checkEvent(date):
                             print(evIns.getSourceName())
                             importantEvents.append(evIns)
                         else:
                             suspiciousEvents.append(evIns)
                     elif ev_obj.SourceName == "Microsoft-Windows-RestartManager":
-                        evIns = SelfInstallEvent(logtype, ev_obj.TimeGenerated, ev_obj.EventID, ev_obj.SourceName)
+                        evIns = SelfInstallEvent(logtype, ev_obj.TimeGenerated, "", ev_obj.SourceName, ev_obj.EventID)
                         if evIns.checkEvent(date, suspiciousEvents):
                             print('Hay una posible instalación por un instalador propio')
                     elif ev_obj.SourceName == "Microsoft-Windows-User Profiles Service" \
                             and not self.checkDuplicatedSelfInstall(importantEvents) \
                             and not self.checkSuspiciousInstall(suspiciousEvents):
-                        evIns = SelfInstallWarnEvent(logtype, ev_obj.TimeGenerated, ev_obj.EventID, ev_obj.SourceName)
+                        evIns = SelfInstallWarnEvent(logtype, ev_obj.TimeGenerated, "", ev_obj.SourceName, ev_obj.EventID)
                         if evIns.checkEvent(date):
                             importantEvents.append(evIns)
                             print('Hay una posible instalación de un editor no reconocido')
                     elif ev_obj.SourceName == "Microsoft-Windows-WindowsUpdateClient":
-                        evIns = SystemUpdateEvent(ev_obj.EventID, ev_obj.TimeGenerated, ev_obj.StringInserts,
-                                                  ev_obj.SourceName)
+                        evIns = SystemUpdateEvent(logtype, ev_obj.TimeGenerated, ev_obj.StringInserts,
+                                                  ev_obj.SourceName, ev_obj.EventID)
                         if evIns.checkEvent(date):
                             importantEvents.append(evIns)
         except:

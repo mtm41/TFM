@@ -3,7 +3,7 @@ from InstallEvent import InstallEvent
 
 
 class SelfInstallEvent(Event):
-    def __init__(self, provider, timeCreated, eventID, sourceName):
+    def __init__(self, provider, timeCreated, data="", sourceName="", eventID=0):
         super().__init__(provider, timeCreated, None)
         self.timecreated = timeCreated
         self.eventID = eventID

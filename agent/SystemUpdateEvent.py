@@ -2,8 +2,9 @@ from Event import Event
 
 
 class SystemUpdateEvent(Event):
-    def __init__(self, id, timeCreated, data, sourceName):
-        super().__init__(id, timeCreated, data)
+    def __init__(self, provider, timeCreated, data, sourceName, id):
+        super().__init__(provider, timeCreated, data)
+        self.id = id
         self.timecreated = timeCreated
         if data:
             self.data = data[0]
