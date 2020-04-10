@@ -18,9 +18,9 @@ class SystemUpdateEvent(Event):
     def getTimeCreated(self):
         return self.timecreated
 
-    def checkEvent(self, date):
+    def checkEvent(self, date, suspiciousEvents, importantsEvents):
         good = False
-        if self.data and self.provider == 19:
+        if self.data and self.id == 19:
             if date.year == self.timecreated.year and date.month == self.timecreated.month \
                     and date.day == self.timecreated.day and date.hour+1 == self.timecreated.hour \
                     and int(date.minute - self.timecreated.minute) <= 5:

@@ -17,12 +17,13 @@ class SelfInstallEvent(Event):
         there is one more event of type MsiInstaller at least. These reasons could prove that a self installation
         (known editor) has happened in the system.
     """
-    def checkEvent(self, date, suspiciousEvents):
+    def checkEvent(self, date, suspiciousEvents, importantsEvents):
         good = False
 
         if self.checkDate(date, self.timecreated):
             if self.eventID == 10001:
                 good = True
+                print('POSIBLE INSTALACION, POR UN INSTALADOR PROPIO')
                 print(suspiciousEvents)
                 for event in suspiciousEvents:
                     if self.checkDate(date, event.getTimeCreated()) and event.getSourceName() == "MsiInstaller":
@@ -34,9 +35,9 @@ class SelfInstallEvent(Event):
 
     def checkDate(self, date, timeCreated):
         good = False
-
         if date.year == timeCreated.year and date.month == timeCreated.month \
-                and date.day == timeCreated.day and date.hour + 1 == timeCreated.hour \
-                and int(date.minute - timeCreated.minute) <= 5:
+                and date.day == timeCreated.day and date.hour+2 == timeCreated.hour \
+                and abs(int(date.minute - timeCreated.minute)) <= 5:
             good = True
+            print(timeCreated)
         return good

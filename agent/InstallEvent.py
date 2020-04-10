@@ -17,13 +17,13 @@ class InstallEvent(Event):
     def getTimeCreated(self):
         return self.timecreated
 
-    def checkEvent(self, date):
+    def checkEvent(self, date, suspiciousEvents, importantsEvents):
         good = False
 
         if self.data and "Installation" in self.data:
             if date.year == self.timecreated.year and date.month == self.timecreated.month \
-                    and date.day == self.timecreated.day and date.hour+1 == self.timecreated.hour \
-                    and int(date.minute - self.timecreated.minute) <= 5:
+                    and date.day == self.timecreated.day and date.hour+2 == self.timecreated.hour \
+                    and abs(int(date.minute - self.timecreated.minute)) <= 5:
                 print('Hay una instalación hecha por un MsiInstaller')
                 good = True
 
