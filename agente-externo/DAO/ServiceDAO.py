@@ -11,16 +11,17 @@ class ServiceDAO:
 
     def create(self):
         conn = DatabaseConnection().conn
-        cur = conn.cursor()
+        try:
+            cur = conn.cursor()
 
-        sql = "INSERT INTO Service(ip, puerto, tecnologia, horaAnalisis, organizacion)" \
-              "VALUES (%s,%s,%s,%s,%s)"
-        data_tuple = (self.ip, self.port, self.tech, self.timeAnalysis, self.organization)
+            sql = "INSERT INTO Servicio(ip, puerto, tecnologia, horaAnalisis, organizacion)" \
+                  "VALUES (%s,%s,%s,%s,%s)"
+            data_tuple = (self.ip, self.port, self.tech, self.timeAnalysis, self.organization)
 
-        cur.execute(sql, data_tuple)
-        conn.commit()
-
-        conn.close()
+            cur.execute(sql, data_tuple)
+            conn.commit()
+        finally:
+            conn.close()
 
     def checkLowest(self):
         conn = DatabaseConnection().conn
@@ -67,12 +68,16 @@ class ServiceDAO:
         deleted = False
         try:
             cur = conn.cursor()
-
+            print('Intentando borrar')
+            print(ip)
+            print(port)
+            print(organization)
             sql = "DELETE FROM Servicio WHERE ip=%s AND puerto=%s AND organizacion=%s"
             data_tuple = (ip, port, organization)
             cur.execute(sql, data_tuple)
 
             if cur.rowcount > 0:
+                print('DELETED')
                 deleted = True
 
             conn.commit()
@@ -89,7 +94,7 @@ class ServiceDAO:
         conn = DatabaseConnection().conn
         cur = conn.cursor()
 
-        sql = "SELECT * FROM Servicio WHERE ip=%s AND port=%s AND organizacion=%s"
+        sql = "SELECT * FROM Servicio WHERE ip=%s AND puerto=%s AND organizacion=%s"
         data_tuple = (ip, port, organizacion)
         cur.execute(sql, data_tuple)
         resultSet = cur.fetchone()

@@ -18,7 +18,7 @@ class Test:
         self.serviceIp = serviceIp
         self.servicePort = servicePort
         self.organization = organization
-        self.testDAO = TestDAO(name, type, analysisTime, endDate, state, description, advice, serviceIp, servicePort)
+        self.testDAO = TestDAO(name, type, analysisTime, endDate, state, description, advice, serviceIp, servicePort, organization)
 
     def create(self):
         self.testDAO.create()
@@ -28,8 +28,6 @@ class Test:
 
     def delete(self):
         self.testDAO.delete(self.id)
-
-
 
     def read(self, timestamp):
         tests = []

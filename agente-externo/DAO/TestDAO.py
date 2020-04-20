@@ -4,7 +4,7 @@ from DatabaseConnection import DatabaseConnection
 
 
 class TestDAO:
-    def __init__(self, name, type, initDate, endDate, state, description, advice, serviceIP, servicePort):
+    def __init__(self, name, type, initDate, endDate, state, description, advice, serviceIP, servicePort, organizacion):
         self.name = name
         self.type = type
         self.initDate = initDate
@@ -14,15 +14,16 @@ class TestDAO:
         self.advice = advice
         self.serviceIp = serviceIP
         self.servicePort = servicePort
+        self.organization = organizacion
 
     def create(self):
         conn = DatabaseConnection().conn
         cur = conn.cursor()
 
         sql = "INSERT INTO Prueba(nombre, tipo, fechaInicio, fechaFin, estado, descripcion, consejo,  servicioIP, " \
-              "servicioPuerto) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+              "servicioPuerto, organizacion) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
         data_tuple = (self.name, self.type, self.initDate, self.endDate, self.state,
-                      self.description, self.advice, self.serviceIp, self.servicePort)
+                      self.description, self.advice, self.serviceIp, self.servicePort, self.organization)
 
         cur.execute(sql, data_tuple)
         conn.commit()

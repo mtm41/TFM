@@ -2,15 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e4acdb14-a6b0-4767-9c09-ebaeab5b0603" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/agente-externo.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/agente-externo.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/GenerateDailyReport.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DAO/OrganizationDAO.py" beforeDir="false" afterPath="$PROJECT_DIR$/DAO/OrganizationDAO.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DAO/ServiceDAO.py" beforeDir="false" afterPath="$PROJECT_DIR$/DAO/ServiceDAO.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DAO/TestDAO.py" beforeDir="false" afterPath="$PROJECT_DIR$/DAO/TestDAO.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Model/Organization.py" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Organization.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/Service.py" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Service.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Model/Test.py" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Schema.sql" beforeDir="false" afterPath="$PROJECT_DIR$/Schema.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server.py" beforeDir="false" afterPath="$PROJECT_DIR$/server.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

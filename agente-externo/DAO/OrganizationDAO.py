@@ -40,10 +40,9 @@ class OrganizationDAO:
             sql += ' AND nombre=%s'
             data_tuple = (key, self.name)
 
-        print(sql)
         cur.execute(sql, data_tuple)
         resultSet = cur.fetchone()
-
+        print(data_tuple)
         if resultSet is not None:
             organization_tuple = (resultSet[0], resultSet[1], resultSet[2], resultSet[3], resultSet[4])
 
@@ -81,6 +80,21 @@ class OrganizationDAO:
         resultSet = cur.fetchone()
 
         if resultSet is not None:
-            organization = (resultSet[0], resultSet[1], resultSet[2], resultSet[3], resultSet[4], resultSet[5], resultSet[6])
+            organization = (resultSet[0], resultSet[1], resultSet[2], resultSet[3], resultSet[4], resultSet[6], resultSet[7])
 
         return organization
+
+    def readOrgWithServices(self):
+        organizations = []
+        conn = DatabaseConnection().conn
+        try:
+            cur = conn.cursor()
+            sql = "SELECT DISTINCT Organizacion.apiKey, Organizacion.email FROM Organizacion,Servicio WHERE Organizacion.nombre=Servicio.organizacion"
+            cur.execute(sql)
+            organizations = cur.fetchall()
+        except Exception as ex:
+            print(ex)
+        finally:
+            conn.close()
+
+        return organizations
