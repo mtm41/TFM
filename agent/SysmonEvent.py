@@ -15,6 +15,7 @@ class SysmonEvent(Event):
         self.opcode = 0
         self.timecreated = system[7]
         self.dgaRequest = DgaRequest.instance
+        self.dgaIp = ''
 
     def formatCookie(self, cookie):
         i = 0
@@ -87,7 +88,9 @@ class SysmonEvent(Event):
         index = pastebin_url.find("<h4>Prediction</h4>")
         interestingText = pastebin_url[index:len(pastebin_url)-1]
 
-        if "DGA" in interestingText:
+        print(interestingText)
+        print(ip)
+        if "dga" in interestingText:
             print('PELIGRO! POSIBLE DGA CONECTADO')
             dga = True
         else:
@@ -103,21 +106,27 @@ class SysmonEvent(Event):
                 ipList = socket.gethostbyname_ex(socket.gethostname())[-1]
                 print(ipList)
 
-                possibleDGA = self.userdate[14]
+                possibleDGA = self.userdate[14].text
                 if self.dgaRequest is None or self.dgaRequest.checkDate():
                     self.calculateReqParameters()
 
                 for ip in ipList:
                     if ip == self.userdate[14].text:
                         possibleDGA = self.userdate[9].text
+                        domain = self.userdate[10].text
 
                 if ip == self.userdate[9].text:
                     possibleDGA = self.userdate[14].text
+                    domain = self.userdate[15].text
                 else:
                     possibleDGA = self.userdate[9].text
+                    domain = self.userdate[10].text
 
                 print('Empieza')
-                dgaDomain = DgaDomainModel(possibleDGA)
+                self.dgaIp = possibleDGA
+                if domain == '':
+                    domain = socket.gethostbyaddr(possibleDGA)
+                dgaDomain = DgaDomainModel(possibleDGA, domain)
                 print('B1')
                 if dgaDomain.isActive() and dgaDomain.read():
                     if dgaDomain.dga:
@@ -129,8 +138,8 @@ class SysmonEvent(Event):
                     print('Necesaria actualizacion')
                 else:
                     print('IP EXTERNA: %s' % possibleDGA)
-                    good = self.makePost(possibleDGA)
-                    dgaDomain = DgaDomainModel(possibleDGA, "n/a", good, str(date))
+                    good = self.makePost(domain)
+                    dgaDomain = DgaDomainModel(possibleDGA, domain, good, str(date))
                     dgaDomain.createDgaDomain()
 
         return good

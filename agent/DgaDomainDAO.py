@@ -12,11 +12,13 @@ class DgaDomainDAO:
         self.fecha = date
 
     def create(self):
-        conn = DatabaseConnection(DatabaseConnection.dbFile).conn
+        conn = DatabaseConnection(False).conn
         cur = conn.cursor()
 
         sql = "INSERT INTO DgaDomain(ip, dominio, dga, fecha) VALUES(?,?,?,?)"
-        dga = int(self.dga == 'true')
+        dga = 0
+        if self.dga:
+            dga = 1
         print('Insert')
         data_tuple = (self.ip, self.dominio, dga, self.fecha)
         print(data_tuple)
@@ -30,9 +32,9 @@ class DgaDomainDAO:
 
     def isActive(self, date):
         active = False
-        conn = DatabaseConnection(DatabaseConnection.dbFile).conn
+        conn = DatabaseConnection(False).conn
         cur = conn.cursor()
-
+        print('IsActive')
         sql = "SELECT * FROM DgaDomain WHERE ip=?"
         dateToday = datetime.datetime.utcnow()
         dateTomorrow = datetime.date.today() + datetime.timedelta(days=1)
@@ -52,7 +54,7 @@ class DgaDomainDAO:
         return active
 
     def exists(self):
-        conn = DatabaseConnection(DatabaseConnection.dbFile).conn
+        conn = DatabaseConnection(False).conn
         cur = conn.cursor()
 
         exists = False
@@ -68,12 +70,12 @@ class DgaDomainDAO:
         return exists
 
     def read(self, ip):
-        conn = DatabaseConnection(DatabaseConnection.dbFile).conn
+        conn = DatabaseConnection(False).conn
         cur = conn.cursor()
 
         sql = "SELECT * FROM DgaDomain WHERE ip='%s" % ip
         resultSet = cur.execute(sql)
-
+        print('Read')
         dgaDomain = resultSet.next()
         if dgaDomain:
             self.ip = dgaDomain[0]
@@ -83,4 +85,3 @@ class DgaDomainDAO:
 
         conn.close()
         return dgaDomain
-
