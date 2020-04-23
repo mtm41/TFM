@@ -23,7 +23,7 @@ class GenerateDailyReport:
             resp = requests.get(url=api_endpoint, verify=False)
             response = resp.json()
             report = self.generateHtml(response)
-            server.sendReportToUser(email, report, 'Publica')
+            server.sendReportToUser(email, report, 'Publica', False)
 
     def generateHtml(self, jsonReport):
         reportTitle1 = '<h1 class="test-results-header">Informe {} / Dia {}</h1>'.format(jsonReport['Organization'],
@@ -48,15 +48,17 @@ class GenerateDailyReport:
                           '<td class="test-result-table-header-cell">Fecha Inicio</td>' \
                           '<td class="test-result-table-header-cell">Fecha Fin</td>' \
                           '<td class="test-result-table-header-cell">Estado</td>' \
-                          '<td class="test-result-table-header-cell">Descripcion</td>'
+                          '<td class="test-result-table-header-cell">Descripcion</td>' #\
+                          #'<td class="test-result-table-header-cell">Información adicional</td>'
 
         testStructure = '<tr class="test-result-step-row test-result-step-row-altone">' \
                         '<td class="test-result-step-command-cell">{}' \
                         '</td><td class="test-result-step-description-cell">{}</td>' \
-                        '<td class="test-result-step-result-cell-ok">{}</td>' \
-                        '<td class="test-result-step-result-cell-ok">{}</td>' \
-                        '<td class="test-result-step-result-cell-ok">{}</td>' \
-                        '<td class="test-result-step-result-cell-ok">{}</td></tr>'
+                        '<td class="test-result-step-result-cell">{}</td>' \
+                        '<td class="test-result-step-result-cell">{}</td>' \
+                        '<td class="test-result-step-result-cell">{}</td>' \
+                        '<td class="test-result-step-result-cell">{}</td></tr>'# \
+                        #'<td class="test-result-step-result-cell">{}</td></tr>'
 
         replaceString = '</tr></thead><tbody>{}</tbody></table></body></html>'
 
@@ -71,7 +73,7 @@ class GenerateDailyReport:
             serviceBody = htmlReport_body
             for test in tests:
                 serviceBody += testStructure.format(test['Name'], test['Type'], test['Analysised Time'],
-                                                    test['Analysis End Time'], test['State'], test['Description'])
+                                                    test['Analysis End Time'], test['State'], test['Description'], test['Advice'])
 
             htmlReport += service_header + replaceString.format(serviceBody)
 

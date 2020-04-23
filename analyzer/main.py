@@ -53,7 +53,7 @@ def manageWebServer(analysis, ip, organization, port):
             print(checks[check])
             if type(checks[check]) == dict and checks[check].get('message'):
                 test = Test(ip, port, organization, 'undefined', check, 'Web server headers', str(begin), str(end),
-                            0, 'na', checks[check].get('message'))
+                            0, checks[check].get('message'), checks[check].get('message'))
                 test.create()
             elif check == 'Score':
                 test = Test(ip, port, organization, 'undefined', check, 'Web server headers', str(begin), str(end),

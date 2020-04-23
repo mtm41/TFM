@@ -1,5 +1,6 @@
 # Python Watcher service for analyzer
 import os
+import subprocess
 import time
 from datetime import datetime
 
@@ -33,7 +34,7 @@ if __name__ == '__main__':
             conn = DatabaseConnection().conn
             cur = conn.cursor()
 
-            sql = 'SELECT ip, puerto, organizacion, horaAnalisis, domainName FROM Servicio ' \
+            sql = 'SELECT ip, puerto, organizacion, horaAnalisis, domainName, tecnologia FROM Servicio ' \
                   'WHERE NOT EXISTS (SELECT * FROM Prueba WHERE Servicio.ip=Prueba.servicioIp AND Servicio.puerto=Prueba.servicioPuerto AND Servicio.organizacion=Prueba.organizacion ' \
                   'AND DATE_FORMAT(Prueba.fechaInicio, "%Y-%m-%d") = CURDATE()) ORDER BY horaAnalisis LIMIT 1;'
             #sql = "SELECT ip, puerto, organizacion, horaAnalisis, domainName FROM Servicio WHERE horaAnalisis > '{}' ORDER BY horaAnalisis Limit 1".format(datetime.now().__format__("%H:%M:%S"))
@@ -47,12 +48,14 @@ if __name__ == '__main__':
             organization = ''
             timeForAnalysis = ''
             domain = ''
+            tecnologia = ''
             if resultSet is not None:
                 ip = resultSet[0]
                 port = resultSet[1]
                 organization = resultSet[2]
                 timeForAnalysis = resultSet[3]
                 domain = resultSet[4]
+                tecnologia = resultSet[5]
 
                 timeForAnalysis = datetime.strptime(str(timeForAnalysis), "%H:%M:%S").__format__("%H:%M:%S")
                 print(timeForAnalysis)
@@ -72,13 +75,16 @@ if __name__ == '__main__':
             cur.close()
             conn.close()
 
-            time.sleep(sleep)
-
             if resultSet is not None:
+                if sleep > 0:
+                    time.sleep(sleep)
                 print('SE EJECUTARIA EL ANALYZER')
-                break
-                # command = 'python3 /rute/to/Analyzer.py {} {} {}'.format(ip, port, organization, domain)
-                # os.system(command)
+                command = 'python3 /root/PycharmProjects/TFM/analyzer/main.py {} \'{}\' \'{}\' {} {}'.format(port, ip, organization, domain, tecnologia)
+                proc = subprocess.Popen([command], stdout=subprocess.PIPE, shell=True)
+                (out, err) = proc.communicate()
+                print(out)
+            else:
+                time.sleep(sleep)
         except Exception as ex:
             print('ERROR {0}'.format(ex))
             break

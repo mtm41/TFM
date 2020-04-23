@@ -59,13 +59,13 @@ class Analyzer:
     def getVersion(self, ports):
         result = {}
         distributions = [
-            'Ubuntu',
-            'Debian',
-            'Windows',
-            'Centos',
-            'RHEL',
-            'Gentoo',
-            'BSD'
+            'ubuntu',
+            'debian',
+            'windows',
+            'centos',
+            'rhel',
+            'gentoo',
+            'bsd'
         ]
 
         for port in ports:
@@ -97,7 +97,7 @@ class Analyzer:
                     numberFound = False
 
             for distribution in distributions:
-                if str(res).find(distribution) > -1:
+                if str(res).lower().find(distribution) > -1:
                     message = 'Se ha encontrado la distribución de la maquina {}'.format(distribution)
                     distributionFound = distribution
                     print(message)
@@ -135,17 +135,22 @@ class Analyzer:
             'Score': ''
         }
 
-        cmd = 'curl --head https://www.google.es'
+        cmd = 'curl --head {}'.format('https://www.xataka.com')
         proc = subprocess.Popen([cmd], stdout=subprocess.PIPE, shell=True)
         (out, err) = proc.communicate()
         firstLine = str(out).split("\\r")[0]
 
         # Looking for 200 code
         if firstLine.find('20') > -1:
+            print('TIENE HTTPS ACTIVADO')
             checks['HttpsEnabled'] = True
             checks['SecuredCookie'] = self.checkCookie(str(out))
             firstLine = str(out).split("\\r")[0]
 
+            cmd = 'curl --head {}'.format('http://www.xataka.com')
+            proc = subprocess.Popen([cmd], stdout=subprocess.PIPE, shell=True)
+            (out, err) = proc.communicate()
+            firstLine = str(out).split("\\r")[0]
             # Redirection
             if str(firstLine).find('30') > -1 and str(out).find('Location: https://') > -1:
                 checks['HttpsRedirection'] = True
@@ -155,7 +160,7 @@ class Analyzer:
                 if str(out).find(risk) > -1:
                     checks[risk] = True
 
-        securityHeadersURL = 'https://securityheaders.com/?q={}&followRedirects=on'.format('www.ua.es')
+        securityHeadersURL = 'https://securityheaders.com/?q={}&followRedirects=on'.format('www.xataka.com')
 
         headers = {
             'Connection': 'keep-alive',

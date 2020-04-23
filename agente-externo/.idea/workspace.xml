@@ -2,14 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e4acdb14-a6b0-4767-9c09-ebaeab5b0603" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/GenerateDailyReport.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../analyzer/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DAO/OrganizationDAO.py" beforeDir="false" afterPath="$PROJECT_DIR$/DAO/OrganizationDAO.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DAO/ServiceDAO.py" beforeDir="false" afterPath="$PROJECT_DIR$/DAO/ServiceDAO.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DAO/TestDAO.py" beforeDir="false" afterPath="$PROJECT_DIR$/DAO/TestDAO.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GenerateDailyReport.py" beforeDir="false" afterPath="$PROJECT_DIR$/GenerateDailyReport.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Model/Organization.py" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Organization.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/Test.py" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server.py" beforeDir="false" afterPath="$PROJECT_DIR$/server.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Watcher.py" beforeDir="false" afterPath="$PROJECT_DIR$/Watcher.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../analyzer/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../analyzer/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../analyzer/Analyzer.py" beforeDir="false" afterPath="$PROJECT_DIR$/../analyzer/Analyzer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../analyzer/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../analyzer/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,7 +36,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../analyzer" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="SvnConfiguration">
@@ -53,17 +53,17 @@
     <servers />
   </component>
   <component name="WindowStateProjectService">
-    <state x="743" y="290" width="424" height="482" key="FileChooserDialogImpl" timestamp="1585299788154">
+    <state x="743" y="290" width="424" height="482" key="FileChooserDialogImpl" timestamp="1587558043357">
       <screen x="0" y="27" width="1920" height="1011" />
     </state>
-    <state x="743" y="290" width="424" height="482" key="FileChooserDialogImpl/0.27.1920.1011@0.27.1920.1011" timestamp="1585299788154" />
+    <state x="743" y="290" width="424" height="482" key="FileChooserDialogImpl/0.27.1920.1011@0.27.1920.1011" timestamp="1587558043357" />
     <state x="571" y="238" key="SettingsEditor" timestamp="1585216620738">
       <screen x="0" y="27" width="1920" height="1011" />
     </state>
     <state x="571" y="238" key="SettingsEditor/0.27.1920.1011@0.27.1920.1011" timestamp="1585216620738" />
-    <state x="616" y="360" key="com.intellij.ide.util.TipDialog" timestamp="1585299767309">
+    <state x="616" y="360" key="com.intellij.ide.util.TipDialog" timestamp="1587374872408">
       <screen x="0" y="27" width="1920" height="1011" />
     </state>
-    <state x="616" y="360" key="com.intellij.ide.util.TipDialog/0.27.1920.1011@0.27.1920.1011" timestamp="1585299767309" />
+    <state x="616" y="360" key="com.intellij.ide.util.TipDialog/0.27.1920.1011@0.27.1920.1011" timestamp="1587374872408" />
   </component>
 </project>

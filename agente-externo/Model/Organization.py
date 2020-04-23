@@ -1,6 +1,8 @@
+import base64
 import datetime
 import time
 
+import server
 from DAO.OrganizationDAO import OrganizationDAO
 from Model.Service import Service
 from Model.Test import Test
@@ -61,6 +63,8 @@ class Organization:
                     print('ENTRA')
                     if self.isInTimeInterval(toolStartedTime, scheduleInit, scheduleEnd) == 0 or self.isInTimeInterval(toolStartedTime, scheduleInit, scheduleEnd) == 2:
                         print('AVISO, SE HA INICIADO EN UNA HORA PROHIBIDA')
+                        alert = 'AVISO! SE ACABA DE INICIAR EL EQUIPO EN UNA HORA PROHIBIDA'
+                        server.sendReportToUser(self.email, alert, ip, True)
                     service.delete() # We take advantage of On delete cascade option to delete Tests
                     nextCheck = self.sumIntervalTime(toolStartedTime.split(':'))
                     service.analysisTime = str(nextCheck)
@@ -68,6 +72,8 @@ class Organization:
                 elif state == 'end':
                     if self.isInTimeInterval(toolStartedTime, scheduleInit, scheduleEnd) == 1:
                         print('AVISO, SE HA apagado EN UNA HORA PROHIBIDA')
+                        alert = "AVISO! SE HA APAGADO LA HERRAMIENTA EN UNA HORA PROHIBIDA, POSIBLE INTENTO DE EVADIR DETECCIONES"
+                        server.sendReportToUser(self.email, alert, ip, True)
                     service.analysisTime = scheduleInit
                     service.update()
                     test = Test(ip, 0, self.name, 'undefined', 'Monitoring', 'Monitoring', datetime.datetime.now(), datetime.datetime.now(), 0, 'Local machine has stopped monitoring tool', 'Check if this is normal')
@@ -75,6 +81,8 @@ class Organization:
                 else:
                     if self.isInTimeInterval(toolStartedTime, scheduleInit, scheduleEnd) != 1:
                         print('AVISO, SE HA ACTUALIZADO EN UNA HORA PROHIBIDA')
+                        alert = "AVISO! LA HERRAMIENTA SIGUE ACTIVA EN UNA HORA PROHIBIDA"
+                        server.sendReportToUser(self.email, alert, ip, True)
                     nextCheckTime = self.sumIntervalTime(toolStartedTime.split(':'))
                     service.analysisTime = nextCheckTime
                     service.update()
