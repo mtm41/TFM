@@ -98,9 +98,9 @@ class SysmonEvent(Event):
 
         return dga
 
-    def checkEvent(self, date):
+    def checkEvent(self, date, lastCheck):
         good = False
-        if self.checkEventTime(date):
+        if self.checkEventTime(date, lastCheck):
             if self.system[1].text == "3":
                 print('Se ha producido una conexión')
                 ipList = socket.gethostbyname_ex(socket.gethostname())[-1]

@@ -1,3 +1,5 @@
+import math
+
 from Event import Event
 from InstallEvent import InstallEvent
 
@@ -31,12 +33,18 @@ class SelfInstallWarnEvent(Event):
         return installer
 
 
-    def checkEvent(self, date, suspiciousEvents, importantEvents):
+    def checkEvent(self, date, suspiciousEvents, importantEvents, lastCheck):
         good = False
+        if lastCheck is not None:
+            interval = math.ceil((date - lastCheck).total_seconds() / 60)
+        else:
+            interval = 3
         if not self.checkDuplicatedSelfInstall(importantEvents) and not self.checkSuspiciousInstall(suspiciousEvents):
+            print('Warning install')
+            print(self.timecreated)
             if date.year == self.timecreated.year and date.month == self.timecreated.month \
                     and date.day == self.timecreated.day and date.hour+2 == self.timecreated.hour \
-                    and abs(int(date.minute - self.timecreated.minute)) <= 5:
+                    and abs(int(date.minute - self.timecreated.minute)) <= interval:
                 good = True
                 print(self.timecreated)
                 print('INSTALACIOND E EDITOR NO CONOCIDO')

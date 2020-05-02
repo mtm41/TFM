@@ -27,7 +27,6 @@ class DatabaseConnection:
                 ); """,
                 """ CREATE TABLE IF NOT EXISTS Informe (
                         numero integer PRIMARY KEY,
-                        fecha text UNIQUE,
                         formato text,
                         contenido
                 ); """,

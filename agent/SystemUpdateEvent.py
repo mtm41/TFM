@@ -1,3 +1,5 @@
+import math
+
 from Event import Event
 
 
@@ -18,12 +20,16 @@ class SystemUpdateEvent(Event):
     def getTimeCreated(self):
         return self.timecreated
 
-    def checkEvent(self, date, suspiciousEvents, importantsEvents):
+    def checkEvent(self, date, suspiciousEvents, importantsEvents, lastCheck):
+        if lastCheck is not None:
+            interval = math.ceil((date - lastCheck).total_seconds() / 60)
+        else:
+            interval = 3
         good = False
         if self.data and self.id == 19:
             if date.year == self.timecreated.year and date.month == self.timecreated.month \
                     and date.day == self.timecreated.day and date.hour+1 == self.timecreated.hour \
-                    and int(date.minute - self.timecreated.minute) <= 5:
+                    and int(date.minute - self.timecreated.minute) <= interval:
                 print('Hay una actualización del sistema')
                 print(self.data)
                 good = True
