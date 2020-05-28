@@ -24,7 +24,6 @@ class TestDAO:
               "servicioPuerto, organizacion) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
         data_tuple = (self.name, self.type, self.initDate, self.endDate, self.state,
                       self.description, self.advice, self.serviceIp, self.servicePort, self.organization)
-        print(data_tuple)
 
         cur.execute(sql, data_tuple)
         conn.commit()
@@ -61,12 +60,12 @@ class TestDAO:
                 tests.append(test)
             row = cur.fetchone()
 
+        conn.close()
         return tests
 
     def executedInDate(self, plannedTime, timestamp):
         sameDay = False
         serviceStartUp = timestamp
-        print(plannedTime)
         date = plannedTime
 
         if serviceStartUp.day == date.day and serviceStartUp.month == date.month and serviceStartUp.year == date.year:

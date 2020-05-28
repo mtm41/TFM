@@ -34,7 +34,6 @@ class Test:
         tests_tuples = self.testDAO.read(self.serviceIp, self.servicePort, self.organization, timestamp)
 
         for test_tuple in tests_tuples:
-            print(test_tuple[6])
             test = Test(test_tuple[8], test_tuple[9], test_tuple[10], test_tuple[0], test_tuple[1], test_tuple[2],
                         test_tuple[3], test_tuple[4], test_tuple[5], test_tuple[6], test_tuple[7])
             tests.append(test)

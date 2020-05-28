@@ -1,14 +1,16 @@
 import mysql.connector as mariadb
+import yaml
 
 
 class DatabaseConnection:
     conn = None
 
     def __init__(self):
-        self.username = 'manuel'
-        self.database = 'Analysis'
+        conf = yaml.load(open('application.yml'))
+        self.username = conf['database_credentials']['username']
+        self.database = conf['database_credentials']['database']
         self.port = '3306'
-        self.conn = mariadb.connect(host="localhost", user=self.username, password='eljoker97', database=self.database)
+        self.conn = mariadb.connect(host="localhost", user=self.username, password=conf['database_credentials']['password'], database=self.database)
 
     def close(self):
         if self.conn:
