@@ -52,7 +52,6 @@ class ServiceDAO:
             sql = "UPDATE Servicio SET horaAnalisis=%s WHERE ip=%s AND puerto=%s AND organizacion=%s"
             data_tuple = (self.timeAnalysis, self.ip, self.port, self.organization)
 
-            print(data_tuple)
             cur.execute(sql, data_tuple)
             if cur.rowcount > 0:
                 updated = True
@@ -68,16 +67,11 @@ class ServiceDAO:
         deleted = False
         try:
             cur = conn.cursor()
-            print('Intentando borrar')
-            print(ip)
-            print(port)
-            print(organization)
             sql = "DELETE FROM Servicio WHERE ip=%s AND puerto=%s AND organizacion=%s"
             data_tuple = (ip, port, organization)
             cur.execute(sql, data_tuple)
 
             if cur.rowcount > 0:
-                print('DELETED')
                 deleted = True
 
             conn.commit()
@@ -120,4 +114,5 @@ class ServiceDAO:
             services.append(service)
             row = cur.fetchone()
 
+        conn.close()
         return services

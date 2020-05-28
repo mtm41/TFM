@@ -1,5 +1,8 @@
+import requests
+from requests import HTTPError
+
 from DatabaseConnection import DatabaseConnection
-#from Model.Organization import Organization
+import yaml
 
 
 class OrganizationDAO:
@@ -27,7 +30,22 @@ class OrganizationDAO:
         conn.close()
 
     def generateKey(self):
-        return "AJDOH382U3JJD9U83J232UD923"
+        key = 'error'
+        conf = yaml.load(open('application.yml'))
+        api_key = conf['hotbits_credentials']['api_key']
+        url = 'https://www.fourmilab.ch/cgi-bin/Hotbits.api?nbytes=128&fmt=password&npass=1&lpass=15&pwtype=2&apikey=' \
+              + api_key
+        try:
+            response = requests.get(url)
+            response.raise_for_status()
+        except HTTPError as http_err:
+            print(f'HTTP error occurred: {http_err}')
+        except Exception as err:
+            print(f'Other error occurred: {err}')
+        else:
+            key = response.data.decode("utf-8")
+
+        return key
 
     def obtainKey(self, key):
         organization_tuple = None
@@ -42,7 +60,6 @@ class OrganizationDAO:
 
         cur.execute(sql, data_tuple)
         resultSet = cur.fetchone()
-        print(data_tuple)
         if resultSet is not None:
             organization_tuple = (resultSet[0], resultSet[1], resultSet[2], resultSet[3], resultSet[4])
 
@@ -80,7 +97,8 @@ class OrganizationDAO:
         resultSet = cur.fetchone()
 
         if resultSet is not None:
-            organization = (resultSet[0], resultSet[1], resultSet[2], resultSet[3], resultSet[4], resultSet[6], resultSet[7])
+            organization = (
+            resultSet[0], resultSet[1], resultSet[2], resultSet[3], resultSet[4], resultSet[6], resultSet[7])
 
         return organization
 

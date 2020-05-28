@@ -2,9 +2,10 @@ import base64
 import datetime
 import os
 import smtplib
-import time
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from pydoc import html
+import yaml
 
 from flask import Flask
 from flask import jsonify
@@ -24,6 +25,8 @@ def get():
 
 @app.route('/api/<key>/report/<timestamp>', methods=['GET'])
 def getReport(key, timestamp):
+    key = html.escape(key)
+    timestamp = html.escape(timestamp)
     org = Organization()
     if org.authenticate(key):
         report = Report(timestamp, org.name)
@@ -39,12 +42,11 @@ def sendLocalAlert(base64ip):
     base64IpBytes = base64ip.encode('ascii')
     message_bytes = base64.b64decode(base64IpBytes)
     ip_address = message_bytes.decode('ascii')
+    ip_address = html.escape(ip_address)
 
-    api_key = str(request.form.get('key'))
+    api_key = html.escape(str(request.form.get('key')))
     organization = Organization()
-    print(api_key)
     if organization.authenticate(api_key):
-        print('ENTRA')
         localReport = str(request.form.get('alert'))
         if sendReportToUser(organization.email, localReport, ip_address, True):
             return Response("Alert sent", status=200)
@@ -59,13 +61,11 @@ def sendLocalAlert(base64ip):
 def sendLocalReport(base64ip):
     base64IpBytes = base64ip.encode('ascii')
     message_bytes = base64.b64decode(base64IpBytes)
-    ip_address = message_bytes.decode('ascii')
+    ip_address = html.escape(message_bytes.decode('ascii'))
 
-    api_key = str(request.form.get('key'))
+    api_key = html.escape(str(request.form.get('key')))
     organization = Organization()
-    print(api_key)
     if organization.authenticate(api_key):
-        print('ENTRA')
         localReport = str(request.form.get('report'))
         if sendReportToUser(organization.email, localReport, ip_address, False):
             return Response("Report sent", status=200)
@@ -77,9 +77,12 @@ def sendLocalReport(base64ip):
 def sendReportToUser(email, localReport, ip, alert):
     sent = True
     try:
+        conf = yaml.load(open('application.yml'))
+        emailUser = conf['user_smtp']['email']
+        pwd = conf['user_smtp']['password']
         gateway = smtplib.SMTP(host='smtp.gmail.com', port=587)
         gateway.starttls()
-        gateway.login('auto.diagnose.tool.tfm@gmail.com', 'Eyg7JgGKY3FMFbH')
+        gateway.login(emailUser, pwd)
 
         msg = MIMEMultipart('alternative')
         msg['From'] = 'auto.diagnose.tool.tfm@gmail.com'
@@ -103,18 +106,19 @@ def sendReportToUser(email, localReport, ip, alert):
 def beginWorkingDay(base64ip):
     now = datetime.datetime.now().strftime('%H:%M')
 
-    print(now)
     base64IpBytes = base64ip.encode('ascii')
     message_bytes = base64.b64decode(base64IpBytes)
-    ip_address = message_bytes.decode('ascii')
+    ip_address = html.escape(message_bytes.decode('ascii'))
 
-    api_key = str(request.form.get('key'))
+    api_key = html.escape(str(request.form.get('key')))
     state = str(request.form.get('state'))
 
     if state == 'start' or state == 'end':
         organization = Organization()
         if organization.authenticate(api_key):
             organization.checkSchedule(ip_address, now, state)
+            # this command precises good sudoers configuration
+            os.system('sudo systemctl restart watcher')
             return Response("TIME UPDATED", status=200)
         else:
             return Response("NOT AUTHORIZED", status=403)
@@ -128,16 +132,16 @@ def updateWorkingDay(base64ip):
     state = 'update'
     base64IpBytes = base64ip.encode('ascii')
     message_bytes = base64.b64decode(base64IpBytes)
-    ip_address = message_bytes.decode('ascii')
+    ip_address = html.escape(message_bytes.decode('ascii'))
 
-    api_key = str(request.form.get('key'))
+    api_key = html.escape(str(request.form.get('key')))
 
     organization = Organization()
     if organization.authenticate(api_key):
         organization.checkSchedule(ip_address, now, state)
-        return Response("TIME UPDATED", status=200)
         # restart Watcher
-        # os.system('sudo systemctl restart watcher')
+        os.system('sudo systemctl restart watcher')
+        return Response("TIME UPDATED", status=200)
     else:
         return Response("NOT AUTHORIZED", status=403)
 
@@ -148,10 +152,10 @@ def changeTimeForServiceScan(base64Service):
     message_bytes = base64.b64decode(base64ServiceBytes)
     message = message_bytes.decode('ascii')
 
-    ip = str(message).split('&', 1)[0]
-    port = str(message).split('&', 1)[1]
-    api_key = request.args.get('key')
-    updatedTime = request.form.get('time')
+    ip = html.escape(str(message).split('&', 1)[0])
+    port = html.escape(str(message).split('&', 1)[1])
+    api_key = html.escape(request.args.get('key'))
+    updatedTime = html.escape(request.form.get('time'))
 
     organization = Organization()
     organization.authenticate(api_key)
@@ -173,8 +177,9 @@ def deleteServiceScan(key, base64Service):
     message_bytes = base64.b64decode(base64ServiceBytes)
     message = message_bytes.decode('ascii')
 
-    ip = str(message).split('&', 1)[0]
-    port = str(message).split('&', 1)[1]
+    ip = html.escape(str(message).split('&', 1)[0])
+    port = html.escape(str(message).split('&', 1)[1])
+    key = html.escape(key)
 
     organization = Organization()
     organization.authenticate(key)
@@ -191,7 +196,8 @@ def deleteServiceScan(key, base64Service):
 def deleteOrganization(key, organization):
     base64OrganizationBytes = organization.encode('ascii')
     message_bytes = base64.b64decode(base64OrganizationBytes)
-    message = message_bytes.decode('ascii')
+    message = html.escape(message_bytes.decode('ascii'))
+    key = html.escape(key)
 
     organizationForKey = Organization()
     organizationForKey.authenticate(key)

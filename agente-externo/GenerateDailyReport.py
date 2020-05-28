@@ -1,5 +1,4 @@
 import sys
-from datetime import datetime
 
 import requests
 
@@ -48,8 +47,7 @@ class GenerateDailyReport:
                           '<td class="test-result-table-header-cell">Fecha Inicio</td>' \
                           '<td class="test-result-table-header-cell">Fecha Fin</td>' \
                           '<td class="test-result-table-header-cell">Estado</td>' \
-                          '<td class="test-result-table-header-cell">Descripcion</td>' #\
-                          #'<td class="test-result-table-header-cell">Información adicional</td>'
+                          '<td class="test-result-table-header-cell">Descripcion</td>'
 
         testStructure = '<tr class="test-result-step-row test-result-step-row-altone">' \
                         '<td class="test-result-step-command-cell">{}' \
@@ -57,8 +55,7 @@ class GenerateDailyReport:
                         '<td class="test-result-step-result-cell">{}</td>' \
                         '<td class="test-result-step-result-cell">{}</td>' \
                         '<td class="test-result-step-result-cell">{}</td>' \
-                        '<td class="test-result-step-result-cell">{}</td></tr>'# \
-                        #'<td class="test-result-step-result-cell">{}</td></tr>'
+                        '<td class="test-result-step-result-cell">{}</td></tr>'
 
         replaceString = '</tr></thead><tbody>{}</tbody></table></body></html>'
 

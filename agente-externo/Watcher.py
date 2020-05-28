@@ -1,6 +1,7 @@
 # Python Watcher service for analyzer
 import os
 import subprocess
+import yaml
 import time
 from datetime import datetime
 
@@ -12,10 +13,11 @@ class DatabaseConnection:
     conn = None
 
     def __init__(self):
-        self.username = 'Watcher'
-        self.database = 'Analysis'
+        conf = yaml.load(open('application.yml'))
+        self.username = conf['user_watcher']['username']
+        self.database = conf['user_watcher']['database']
         self.port = '3306'
-        self.conn = mariadb.connect(user=self.username, password='watcher123', database=self.database)
+        self.conn = mariadb.connect(user=self.username, password=conf['user_watcher']['password'], database=self.database)
 
     def close(self):
         if self.conn:
@@ -37,7 +39,6 @@ if __name__ == '__main__':
             sql = 'SELECT ip, puerto, organizacion, horaAnalisis, domainName, tecnologia FROM Servicio ' \
                   'WHERE NOT EXISTS (SELECT * FROM Prueba WHERE Servicio.ip=Prueba.servicioIp AND Servicio.puerto=Prueba.servicioPuerto AND Servicio.organizacion=Prueba.organizacion ' \
                   'AND DATE_FORMAT(Prueba.fechaInicio, "%Y-%m-%d") = CURDATE()) ORDER BY horaAnalisis LIMIT 1;'
-            #sql = "SELECT ip, puerto, organizacion, horaAnalisis, domainName FROM Servicio WHERE horaAnalisis > '{}' ORDER BY horaAnalisis Limit 1".format(datetime.now().__format__("%H:%M:%S"))
             cur.execute(sql)
             resultSet = cur.fetchone()
 
@@ -78,7 +79,8 @@ if __name__ == '__main__':
             if resultSet is not None:
                 if sleep > 0:
                     time.sleep(sleep)
-                print('SE EJECUTARIA EL ANALYZER')
+                print('ANALYZER IS PERFORMING SOME TESTS')
+                # Good sudoers config is required
                 command = 'python3 /root/PycharmProjects/TFM/analyzer/main.py {} \'{}\' \'{}\' {} {}'.format(port, ip, organization, domain, tecnologia)
                 proc = subprocess.Popen([command], stdout=subprocess.PIPE, shell=True)
                 (out, err) = proc.communicate()

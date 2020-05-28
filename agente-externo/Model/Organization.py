@@ -25,8 +25,6 @@ class Organization:
         self.organizationDAO.create()
 
     def isInTimeInterval(self, time, initInternal, endInterval):
-        print('TIME')
-        print(time)
         inInternal = -1
         hourTime = int(str(time).split(':')[0])
         minTime = int(str(time).split(':')[1])
@@ -54,15 +52,12 @@ class Organization:
         scheduleInit = org[5]
         scheduleEnd = org[6]
         toolStartedTime = str(toolStartedTime).split(':')
-        print(toolStartedTime)
         toolStartedTime = self.sumIntervalTime(toolStartedTime)
         service = Service(self.name, ip, 0, 'Monitoring', toolStartedTime)
         if service.read() is not None:
             if scheduleInit and scheduleEnd:
                 if state == 'start':
-                    print('ENTRA')
                     if self.isInTimeInterval(toolStartedTime, scheduleInit, scheduleEnd) == 0 or self.isInTimeInterval(toolStartedTime, scheduleInit, scheduleEnd) == 2:
-                        print('AVISO, SE HA INICIADO EN UNA HORA PROHIBIDA')
                         alert = 'AVISO! SE ACABA DE INICIAR EL EQUIPO EN UNA HORA PROHIBIDA'
                         server.sendReportToUser(self.email, alert, ip, True)
                     service.delete() # We take advantage of On delete cascade option to delete Tests
@@ -71,16 +66,16 @@ class Organization:
                     service.create()
                 elif state == 'end':
                     if self.isInTimeInterval(toolStartedTime, scheduleInit, scheduleEnd) == 1:
-                        print('AVISO, SE HA apagado EN UNA HORA PROHIBIDA')
                         alert = "AVISO! SE HA APAGADO LA HERRAMIENTA EN UNA HORA PROHIBIDA, POSIBLE INTENTO DE EVADIR DETECCIONES"
                         server.sendReportToUser(self.email, alert, ip, True)
                     service.analysisTime = scheduleInit
                     service.update()
-                    test = Test(ip, 0, self.name, 'undefined', 'Monitoring', 'Monitoring', datetime.datetime.now(), datetime.datetime.now(), 0, 'Local machine has stopped monitoring tool', 'Check if this is normal')
+                    test = Test(ip, 0, self.name, 'undefined', 'Monitoring', 'Monitoring', datetime.datetime.now(),
+                                datetime.datetime.now(), 0, 'Local machine has stopped monitoring tool',
+                                'Check if this is normal')
                     test.create()
                 else:
                     if self.isInTimeInterval(toolStartedTime, scheduleInit, scheduleEnd) != 1:
-                        print('AVISO, SE HA ACTUALIZADO EN UNA HORA PROHIBIDA')
                         alert = "AVISO! LA HERRAMIENTA SIGUE ACTIVA EN UNA HORA PROHIBIDA"
                         server.sendReportToUser(self.email, alert, ip, True)
                     nextCheckTime = self.sumIntervalTime(toolStartedTime.split(':'))
