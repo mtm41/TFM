@@ -1,1 +1,0 @@
-C:\Users\ManuelTorresMendoza\PycharmProjects\agent1\venv\Scripts\python.exe C:\Users\ManuelTorresMendoza\PycharmProjects\agent1\ActionResponse.py "Mostrar aviso" "installations"
