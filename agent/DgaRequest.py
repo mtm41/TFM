@@ -4,7 +4,6 @@ from datetime import datetime
 class DgaRequest:
     class __DgaRequest:
         def __init__(self, cookie, csrf_token):
-            print('Instancia')
             self.cookie = cookie
             self.csrf_token = csrf_token
             self.date = datetime.utcnow()
@@ -13,7 +12,6 @@ class DgaRequest:
             return repr(self) + self.cookie + self.csrf_token + self.date
 
         def checkDate(self):
-            print('HOLA')
             renew = False
             if datetime.utcnow().minute - self.date.minute >= 3:
                     renew = True

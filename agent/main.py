@@ -1,20 +1,17 @@
 import os
-import subprocess
 import sys
 
-import PySide2
 from PySide2 import QtWidgets
 from PySide2.QtUiTools import QUiLoader
 from PySide2.QtWidgets import QApplication, QLineEdit, QInputDialog, QPushButton, QComboBox, QTimeEdit
 from PySide2.QtCore import QFile
 
-from AgentMonitor import AgentMonitor
 from DatabaseConnection import DatabaseConnection
 
 
 class MyWidget(QtWidgets.QWidget):
     def __init__(self):
-        ui_file = QFile("untitled.ui")
+        ui_file = QFile("C:\\Users\\ManuelTorresMendoza\\PycharmProjects\\agent1\\untitled.ui")
         ui_file.open(QFile.ReadOnly)
 
         loader = QUiLoader()
@@ -24,11 +21,9 @@ class MyWidget(QtWidgets.QWidget):
         ui_file.close()
         self.window.show()
 
-        print(button)
         sys.exit(app.exec_())
 
     def begin(self):
-        print('BUENAS')
         emailInput = self.window.findChild(QLineEdit, "test")
         devicesInput = self.window.findChild(QComboBox, "comboBox")
         devicesRespInput = self.window.findChild(QComboBox, "comboBox_8")
@@ -84,17 +79,16 @@ class MyWidget(QtWidgets.QWidget):
         self.window.close()
         c = DatabaseConnection()
         c.close()
-        output = os.system('dist\AgentMonitor.exe stop')
-        output = os.system('dist\AgentMonitor.exe start')
+        output = os.system('C:\\Users\\ManuelTorresMendoza\\PycharmProjects\\agent1\\dist\\AgentMonitor.exe stop')
+        output = os.system('C:\\Users\\ManuelTorresMendoza\\PycharmProjects\\agent1\\dist\\AgentMonitor.exe start')
 
-        print(reportGeneration)
         os.system("SCHTASKS /CREATE /SC DAILY /TN \"My tasks2\" /TR "
                   "\"C:\\Users\\ManuelTorresMendoza\\AppData\\Local\\Programs\\Python\\Python37\\python.exe"
                   " C:\\Users\\ManuelTorresMendoza\\PycharmProjects\\agent1\\Watcher.py\" "
                   "/ST {}:{}".format(reportGeneration.split(':')[0], reportGeneration.split(':')[1]))
-        #print(output)
+
         output = os.system('schtasks /create /tn "MyCustomTask" /sc onlogon /tr "C:\\Users\\ManuelTorresMendoza\\PycharmProjects\\agent1\\dist\\Director.exe"')
-        output = os.system('dist\Director.exe')
+        output = os.system('C:\\Users\\ManuelTorresMendoza\\PycharmProjects\\agent1\\venv\\Scripts\\pythonw.exe C:\\Users\\ManuelTorresMendoza\\PycharmProjects\\agent1\\Director.pyw')
 
 
 if __name__ == "__main__":

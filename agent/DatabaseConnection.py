@@ -6,10 +6,9 @@ class DatabaseConnection:
     conn = None
 
     def __init__(self, doCheck=True):
-        dbFile = 'D://diagnose.sqlite'
+        dbFile = 'C:\\Program Files\\AutoDiagnose\\diagnose.sqlite'
         try:
             self.conn = sqlite3.connect(dbFile)
-            print(sqlite3.version)
         except Error as e:
             print(e)
         if doCheck:
@@ -104,7 +103,6 @@ class DatabaseConnection:
             for sql_command in sql_commands:
                 self.conn.execute(sql_command)
         except Error as e:
-            print('PETA')
             print(e.__cause__)
 
         incidents = [

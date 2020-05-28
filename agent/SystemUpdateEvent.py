@@ -4,7 +4,7 @@ from Event import Event
 
 
 class SystemUpdateEvent(Event):
-    def __init__(self, provider, timeCreated, data, sourceName, id):
+    def __init__(self, sid, provider, timeCreated, data, sourceName, id):
         super().__init__(provider, timeCreated, data)
         self.id = id
         self.timecreated = timeCreated
@@ -30,8 +30,6 @@ class SystemUpdateEvent(Event):
             if date.year == self.timecreated.year and date.month == self.timecreated.month \
                     and date.day == self.timecreated.day and date.hour+1 == self.timecreated.hour \
                     and int(date.minute - self.timecreated.minute) <= interval:
-                print('Hay una actualización del sistema')
-                print(self.data)
                 good = True
 
         return good

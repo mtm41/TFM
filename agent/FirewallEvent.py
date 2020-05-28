@@ -20,5 +20,4 @@ class FirewallEvent(Event):
             if self.userdate[3].text == "00000000":
                 good = True
                 self.firewallType = firewallTypes[self.userdate[0].text]
-                print('Alerta: Firewall' + firewallTypes[self.userdate[0].text] + ' desactivado en los últimos 5 minutos')
         return good

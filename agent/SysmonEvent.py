@@ -34,23 +34,17 @@ class SysmonEvent(Event):
         fp = urllib.request.urlopen('https://www.dgaintel.com/', context=context)
         mybytes = fp.read()
         cookie = self.formatCookie(fp.info()['Set-Cookie'])
-        print('OK2')
         mystr = mybytes.decode("utf8")
         fp.close()
         index = mystr.find("<input id=\"csrf_token\" name=\"csrf_token\" type=\"hidden\" value=\"")
         index = index + 62
-        print('OK3')
         csrf_token = ""
         csrf_tokenLength = 91
         while csrf_tokenLength > 0:
             csrf_token += mystr[index]
             index = index + 1
             csrf_tokenLength = csrf_tokenLength - 1
-        print('OK4')
-        print(csrf_token)
-        print(cookie)
         self.dgaRequest = DgaRequest(cookie, csrf_token).instance
-        print('Done')
 
     def makePost(self, ip):
         dga = False
@@ -88,10 +82,7 @@ class SysmonEvent(Event):
         index = pastebin_url.find("<h4>Prediction</h4>")
         interestingText = pastebin_url[index:len(pastebin_url)-1]
 
-        print(interestingText)
-        print(ip)
         if "dga" in interestingText:
-            print('PELIGRO! POSIBLE DGA CONECTADO')
             dga = True
         else:
             print('IS LEGIT')
@@ -102,9 +93,7 @@ class SysmonEvent(Event):
         good = False
         if self.checkEventTime(date, lastCheck):
             if self.system[1].text == "3":
-                print('Se ha producido una conexión')
                 ipList = socket.gethostbyname_ex(socket.gethostname())[-1]
-                print(ipList)
 
                 possibleDGA = self.userdate[14].text
                 if self.dgaRequest is None or self.dgaRequest.checkDate():
@@ -122,22 +111,18 @@ class SysmonEvent(Event):
                     possibleDGA = self.userdate[9].text
                     domain = self.userdate[10].text
 
-                print('Empieza')
                 self.dgaIp = possibleDGA
                 if domain == '':
                     domain = socket.gethostbyaddr(possibleDGA)
                 dgaDomain = DgaDomainModel(possibleDGA, domain)
-                print('B1')
                 if dgaDomain.isActive() and dgaDomain.read():
                     if dgaDomain.dga:
-                        print('Alerta: IP recogida como DGA')
                         good = True
                     else:
                         print('IP LEGÍTIMA')
                 elif dgaDomain.exists():
-                    print('Necesaria actualizacion')
+                    print('Update required')
                 else:
-                    print('IP EXTERNA: %s' % possibleDGA)
                     good = self.makePost(domain)
                     dgaDomain = DgaDomainModel(possibleDGA, domain, good, str(date))
                     dgaDomain.createDgaDomain()

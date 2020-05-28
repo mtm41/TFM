@@ -5,11 +5,12 @@ from InstallEvent import InstallEvent
 
 
 class SelfInstallWarnEvent(Event):
-    def __init__(self, provider, timeCreated, data="", sourceName="", eventID=0):
+    def __init__(self, sid, provider, timeCreated, data="", sourceName="", eventID=0):
         super().__init__(provider, timeCreated, None)
         self.timecreated = timeCreated
         self.eventID = eventID
         self.sourceName = sourceName
+        self.userID = sid
 
     def getSourceName(self):
         return self.sourceName
@@ -40,12 +41,8 @@ class SelfInstallWarnEvent(Event):
         else:
             interval = 3
         if not self.checkDuplicatedSelfInstall(importantEvents) and not self.checkSuspiciousInstall(suspiciousEvents):
-            print('Warning install')
-            print(self.timecreated)
             if date.year == self.timecreated.year and date.month == self.timecreated.month \
                     and date.day == self.timecreated.day and date.hour+2 == self.timecreated.hour \
                     and abs(int(date.minute - self.timecreated.minute)) <= interval:
                 good = True
-                print(self.timecreated)
-                print('INSTALACIOND E EDITOR NO CONOCIDO')
         return good

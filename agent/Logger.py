@@ -22,11 +22,15 @@ class States(enum.Enum):
     CHECK_UPDATES = 'Comprobando actualizaciones\n'
     CHECK_CONNECTIONS = 'Comprobando conexiones externas\n'
     CHECK_ANTIVIRUS = 'Comprobando antivirus\n'
+    ANTIVIRUS_VERSION_FOUND = 'Se ha encontrado la última versión del antivirus\n'
+    ANTIVIRUS_IS_UP_TO_DATE = 'La versión del antivirus está actualizada\n'
+    ANTIVIRUS_IS_NOT_UP_TO_DATE = 'La versión del antivirus no está actualizada\n'
     ERROR_READING_EVENTS = 'Error: No se ha podido acceder al registro de eventos del sistema\n'
     EXECUTING_ACTION_RESPONSE_PO = 'Se va ha ejecutar la accion de respuesta de apagado del equipo\n'
     EXECUTING_ACTION_RESPONSE_SA = 'Se va ha ejecutar la accion de respuesta que muestra una alerta\n'
     EXECUTING_ACTION_RESPONSE_ND = 'Se va ha ejecutar la accion de respuesta que deshabilita los adaptadores de red\n'
-
+    DAILY_REPORT_SENT = 'Informe local enviado\n'
+    DAILY_REPORT_SENDING_FAILED = 'Error enviando informe local\n'
 
 class Logger:
 

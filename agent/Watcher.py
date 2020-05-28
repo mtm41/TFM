@@ -16,16 +16,8 @@ class Watcher:
         self.con = DatabaseConnection(False).conn
 
     def save_report(self):
-        #print(self.year)
-        #print(self.month)
-        #execDate = datetime(int(self.year), int(self.month), int(self.day), int(self.hour), int(self.min), 0)
-        #print(int(datetime.now().strftime('%M')))
-        #actualDate = datetime(int(self.year), int(self.month), int(self.day),
-         #                              int(datetime.now().strftime('%H')), int(datetime.now().strftime('%M')), 0)
-
-        #time.sleep((execDate-actualDate).total_seconds())
         report = self.create_report()
-        reportLocation = 'C:\\Users\\ManuelTorresMendoza\\Desktop\\autoDiagnose_{}.json'.format(calendar.timegm(time.gmtime()))
+        reportLocation = 'C:\\Program Files\\AutoDiagnose\\autoDiagnose_{}.json'.format(calendar.timegm(time.gmtime()))
         sql = "INSERT INTO Informe VALUES (?,?,?)"
 
         data_tuple = (calendar.timegm(time.gmtime()), datetime.now(), 'JSON')
@@ -84,7 +76,6 @@ class Watcher:
                     details = event[1]
                     mark = event[2]
                     eventStructure += incidentStructure.format(incidentTranslate, date, details, mark)
-        print('\n')
         htmlReport += replaceString.format(eventStructure)
 
         f.write(htmlReport)
@@ -123,12 +114,10 @@ class Watcher:
             events = []
 
             cur = self.con.cursor()
-            print(sql)
             cur.execute(sql)
             resultSet = cur.fetchall()
 
             numberOfEvents = len(resultSet)
-            print(numberOfEvents)
             for row in resultSet:
                 events.append(row)
 
@@ -141,13 +130,11 @@ class Watcher:
         cur = self.con.cursor()
         cur.execute(sql)
         resultSet = cur.fetchall()
-        print(len(resultSet))
         report['ExternalConnection'] = []
         for row in resultSet:
             data_tuple = (row[2], 'Ip: {}. Dominio: {}'.format(row[0], row[1]), '2')
             report['ExternalConnection'].append(data_tuple)
 
-        print(report)
         cur.close()
         return report
 
@@ -167,9 +154,9 @@ class Watcher:
         api_key = self.getApikey()
         response = requests.post(url=api_endpoint, verify=False, data={'key': str(api_key), 'report': htmlReport})
         if response.status_code == 200:
-            print('Informe local enviado')
+            print('Local report was sent')
         else:
-            print('Error enviando informe local')
+            print('Error sending local report')
 
         cur.close()
         self.con.close()

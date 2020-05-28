@@ -19,12 +19,9 @@ class DgaDomainDAO:
         dga = 0
         if self.dga:
             dga = 1
-        print('Insert')
         data_tuple = (self.ip, self.dominio, dga, self.fecha)
-        print(data_tuple)
         cur.execute(sql, data_tuple)
         conn.commit()
-        print('Insert1')
         lastId = cur.lastrowid
 
         conn.close()
@@ -34,7 +31,6 @@ class DgaDomainDAO:
         active = False
         conn = DatabaseConnection(False).conn
         cur = conn.cursor()
-        print('IsActive')
         sql = "SELECT * FROM DgaDomain WHERE ip=?"
         dateToday = datetime.datetime.utcnow()
         dateTomorrow = datetime.date.today() + datetime.timedelta(days=1)
@@ -66,7 +62,6 @@ class DgaDomainDAO:
             exists = True
 
         conn.close()
-        print(exists)
         return exists
 
     def read(self, ip):
@@ -75,7 +70,6 @@ class DgaDomainDAO:
 
         sql = "SELECT * FROM DgaDomain WHERE ip='%s" % ip
         resultSet = cur.execute(sql)
-        print('Read')
         dgaDomain = resultSet.next()
         if dgaDomain:
             self.ip = dgaDomain[0]

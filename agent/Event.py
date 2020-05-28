@@ -27,6 +27,5 @@ class Event:
         if str(date.year) == creationYear and date.month == int(creationMonth) \
                 and date.day == int(creationDay) and date.hour == int(creationHour) \
                 and int(date.minute - int(creationMinute)) <= interval:
-            print('ALERT')
             good = True
         return good

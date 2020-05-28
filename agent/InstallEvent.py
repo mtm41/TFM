@@ -4,7 +4,7 @@ from Event import Event
 
 
 class InstallEvent(Event):
-    def __init__(self, provider, timeCreated, data, sourceName, eventID=0):
+    def __init__(self, sid, provider, timeCreated, data, sourceName, eventID=0):
         super().__init__(provider, timeCreated, data)
         self.timecreated = timeCreated
         if data:
@@ -12,6 +12,7 @@ class InstallEvent(Event):
         else:
             self.data = ""
         self.sourceName = sourceName
+        self.userID = sid
 
     def getSourceName(self):
         return self.sourceName
@@ -29,7 +30,6 @@ class InstallEvent(Event):
             if date.year == self.timecreated.year and date.month == self.timecreated.month \
                     and date.day == self.timecreated.day and date.hour+2 == self.timecreated.hour \
                     and abs(int(date.minute - self.timecreated.minute)) <= interval:
-                print('Hay una instalación hecha por un MsiInstaller')
                 good = True
 
         return good

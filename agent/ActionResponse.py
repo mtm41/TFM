@@ -13,12 +13,10 @@ from PySide2.QtWidgets import QPushButton, QApplication, QLabel
 class ActionResponse(QtWidgets.QWidget):
 
     def power_off(self):
-        print('Apagamos el equipo')
-        #os.system("shutdown /s /t 0")
+        os.system("shutdown /s /t 0")
 
     def show_alert_window(self, alert):
-        print('Mostramos alerta')
-        file = open('C:\logUI.log', 'a')
+
         try:
             messages = {
                 'devices': 'Se ha detectado una inserción de dispositivo externo en el equipo. Esta acción \n'
@@ -45,29 +43,26 @@ class ActionResponse(QtWidgets.QWidget):
                                ' puede ser muy perjudicial para el estado de su red, ya que estos dominios pueden\n'
                                ' contener malware que se puede haber distribuido a su equipo.'
             }
-            ui_file = QFile("C:\\Users\\ManuelTorresMendoza\\Desktop\\alert.ui")
+            ui_file = QFile("C:\\Program Files\\AutoDiagnose\\alert.ui")
             ui_file.open(QFile.ReadOnly)
-            file.write('Hemos cargado el fichero\n')
             loader = QUiLoader()
             self.window = loader.load(ui_file)
             message = self.window.findChild(QLabel, "label_2")
             message.setText(messages[alert])
             ui_file.close()
-            file.write('Cargamos la ventana')
             self.window.show()
             button = self.window.findChild(QPushButton, "pushButton")
             button.clicked.connect(self.closeWindow)
 
             sys.exit(app.exec_())
         except Exception as ex:
-            file.write(ex)
+            print(ex)
 
     def closeWindow(self):
         self.window.close()
 
     def shutdown_network(self):
-        print('Cortamos la red')
-        #os.system("wmic path win32_networkadapter where \"NetEnabled='TRUE'\" call disable")
+        os.system("wmic path win32_networkadapter where \"NetEnabled='TRUE'\" call disable")
 
 
 if __name__ == "__main__":

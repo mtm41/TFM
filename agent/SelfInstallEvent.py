@@ -5,11 +5,12 @@ from InstallEvent import InstallEvent
 
 
 class SelfInstallEvent(Event):
-    def __init__(self, provider, timeCreated, data="", sourceName="", eventID=0):
+    def __init__(self, sid, provider, timeCreated, data="", sourceName="", eventID=0):
         super().__init__(provider, timeCreated, None)
         self.timecreated = timeCreated
         self.eventID = eventID
         self.sourceName = sourceName
+        self.userID = sid
 
     def getSourceName(self):
         return self.sourceName
@@ -25,11 +26,8 @@ class SelfInstallEvent(Event):
         if self.checkDate(date, self.timecreated, lastCheck):
             if self.eventID == 10001:
                 good = True
-                print('POSIBLE INSTALACION, POR UN INSTALADOR PROPIO')
-                print(suspiciousEvents)
                 for event in suspiciousEvents:
                     if self.checkDate(date, event.getTimeCreated()) and event.getSourceName() == "MsiInstaller":
-                        print('Hay un restart manager, pero posiblemente debido a un MsiInstaller')
                         good = False
                         break
 
@@ -45,5 +43,4 @@ class SelfInstallEvent(Event):
                 and date.day == timeCreated.day and date.hour+2 == timeCreated.hour \
                 and abs(int(date.minute - timeCreated.minute)) <= interval:
             good = True
-            print(timeCreated)
         return good
