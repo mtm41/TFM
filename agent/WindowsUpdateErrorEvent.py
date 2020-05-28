@@ -8,9 +8,9 @@ class WindowsUpdateErrorEvent(Event):
         self.opcode = 12
         self.timecreated = system[7]
 
-    def checkEvent(self, date):
+    def checkEvent(self, date, lastCheck):
         good = False
-        if self.checkEventTime(date):
+        if self.checkEventTime(date, lastCheck):
             if self.system[1].text == "31":
                 print('Se ha producido un error en una actualización')
                 if self.userdate:

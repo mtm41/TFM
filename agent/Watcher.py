@@ -1,4 +1,9 @@
+import base64
+import socket
+import sys
 from datetime import datetime
+
+import requests
 
 from DatabaseConnection import DatabaseConnection
 import calendar;
@@ -10,8 +15,17 @@ class Watcher:
         self.date = datetime.now()
         self.con = DatabaseConnection(False).conn
 
-    def save_report(self, report):
-        reportLocation = 'C:\\autoDiagnose_{}.json'.format(calendar.timegm(time.gmtime()))
+    def save_report(self):
+        #print(self.year)
+        #print(self.month)
+        #execDate = datetime(int(self.year), int(self.month), int(self.day), int(self.hour), int(self.min), 0)
+        #print(int(datetime.now().strftime('%M')))
+        #actualDate = datetime(int(self.year), int(self.month), int(self.day),
+         #                              int(datetime.now().strftime('%H')), int(datetime.now().strftime('%M')), 0)
+
+        #time.sleep((execDate-actualDate).total_seconds())
+        report = self.create_report()
+        reportLocation = 'C:\\Users\\ManuelTorresMendoza\\Desktop\\autoDiagnose_{}.json'.format(calendar.timegm(time.gmtime()))
         sql = "INSERT INTO Informe VALUES (?,?,?)"
 
         data_tuple = (calendar.timegm(time.gmtime()), datetime.now(), 'JSON')
@@ -76,9 +90,13 @@ class Watcher:
         f.write(htmlReport)
         f.close()
 
+        cur.close()
+        self.send_report(htmlReport)
+        return htmlReport
 
 
-    def send_report(self):
+
+    def create_report(self):
         incidents = [
             'ExternalDeviceConnection',
             'NewInstallationDetection',
@@ -130,11 +148,48 @@ class Watcher:
             report['ExternalConnection'].append(data_tuple)
 
         print(report)
-        self.save_report(report)
-            #sql = "INSERT INTO Informe VALUES (?,?,?)"
+        cur.close()
+        return report
+
+
+    def send_report(self, htmlReport):
+        cur = self.con.cursor()
+        sql = "INSERT INTO Informe VALUES (?,?,?)"
+        cur.execute(sql, (datetime.now().strftime('%y%m%d'), 'html', htmlReport))
+        cur.close()
+        api_endpoint = 'http://192.168.1.127:5000/api/report/{}'
+        message = socket.gethostbyname_ex(socket.gethostname())[-1]
+        addr = message[len(message) - 1]
+        message_bytes = addr.encode('ascii')
+        base64_bytes = base64.b64encode(message_bytes)
+        base64_message = base64_bytes.decode('ascii')
+        api_endpoint = api_endpoint.format(base64_message)
+        api_key = self.getApikey()
+        response = requests.post(url=api_endpoint, verify=False, data={'key': str(api_key), 'report': htmlReport})
+        if response.status_code == 200:
+            print('Informe local enviado')
+        else:
+            print('Error enviando informe local')
+
+        cur.close()
         self.con.close()
 
+    def getApikey(self):
+        configFile = 'C:\\Program Files\\AutoDiagnose\\autodiagnose.conf'
+        f = open(configFile, 'r')
+
+        line = f.readline()
+        api_key = None
+        while line:
+            data_tuple = line.split(':')
+            if str(data_tuple[0]) == 'api_key':
+                api_key = data_tuple[1]
+            line = f.readline()
+
+        f.close()
+
+        return api_key
 
 if __name__ == "__main__":
-    watcher = Watcher()
-    watcher.send_report()
+    reportGenerator = Watcher()
+    reportGenerator.save_report()

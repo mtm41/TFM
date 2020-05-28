@@ -7,11 +7,11 @@ class ExtDevEvent(Event):
         self.level = 5
         self.opcode = 1
 
-    def checkEvent(self, date):
+    def checkEvent(self, date, lastCheck):
         good = False
         if int(self.system[3].text) == self.level and int(self.system[5].text) == self.opcode:
             self.timecreated = self.system[7]
-            if self.checkEventTime(date):
+            if self.checkEventTime(date, lastCheck):
                 print('PELIGRO, USB DETECTADO')
                 good = True
 

@@ -1,3 +1,5 @@
+import math
+
 from Event import Event
 
 
@@ -17,13 +19,16 @@ class InstallEvent(Event):
     def getTimeCreated(self):
         return self.timecreated
 
-    def checkEvent(self, date, suspiciousEvents, importantsEvents):
+    def checkEvent(self, date, suspiciousEvents, importantsEvents, lastCheck):
         good = False
-
+        if lastCheck is not None:
+            interval = math.ceil((date - lastCheck).total_seconds() / 60)
+        else:
+            interval = 3
         if self.data and "Installation" in self.data:
             if date.year == self.timecreated.year and date.month == self.timecreated.month \
                     and date.day == self.timecreated.day and date.hour+2 == self.timecreated.hour \
-                    and abs(int(date.minute - self.timecreated.minute)) <= 5:
+                    and abs(int(date.minute - self.timecreated.minute)) <= interval:
                 print('Hay una instalación hecha por un MsiInstaller')
                 good = True
 

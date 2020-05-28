@@ -35,6 +35,10 @@ class CheckIsUp:
                     f.close()
                     time.sleep(240)
                 except Exception as ex:
+                    f = open(configFile, 'w')
+                    f.write('Peto')
+                    f.write(ex)
+                    f.close()
                     print(ex)
                     data['state'] = 'end'
                     resp = requests.post(url=api_endpoint, verify=False, data=data)  # Send stop signal
